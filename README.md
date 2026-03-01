@@ -161,3 +161,16 @@ Contact: [keefao@example.com](mailto:keefao@example.com)
 
 ---
 
+---
+### Deployment Checklist
+---
+
+```
+Deployment Checklist
+[ ] Set DJANGO_SETTINGS_MODULE to keefao.settings.prod in your host's environment variables.
+
+[ ] Run python manage.py collectstatic during the build phase.
+
+[ ] Ensure CORS_ALLOWED_ORIGINS includes your production frontend URL.
+```
+

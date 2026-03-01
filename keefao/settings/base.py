@@ -12,6 +12,8 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+CORS_ALLOW_CREDENTIALS = True
 
 # -----------------------------
 # Installed apps
@@ -109,6 +111,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+# Allow WhiteNoise to handle compression and caching
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_USE_FINDERS = True
 
 # -----------------------------
 # Auth
@@ -146,6 +151,10 @@ LOGGING = {
         "core": {"handlers": ["console", "core_file"], "level": "INFO", "propagate": False},
     },
 }
+
+# Ensure the logs directory exists so FileHandlers don't crash
+LOGS_DIR = BASE_DIR / "logs"
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 # -----------------------------
 #  Payment Settings
