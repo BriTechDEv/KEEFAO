@@ -1,382 +1,163 @@
+
+---
+
 # KEEFAO Backend API
 
-Kenya Education Empowerment Fund Alumni Organization (KEEFAO) Backend System
+**Kenya Education Empowerment Fund Alumni Organization (KEEFAO) Backend System**
 
-A secure, scalable Django REST API powering the KEEFAO website for member registration, event management, contributions, announcements, and gallery.
-
----
-
-# Overview
-
-KEEFAO is a Community Based Organization (CBO) in Kakamega, Kenya, founded in 2017 by KEEF alumni to support needy students through education funding.
-
-This backend provides:
-
-• Member registration and authentication
-• Event creation and registration
-• Public contributions (no login required)
-• Announcements management
-• Gallery management
-• REST API for frontend integration
+A secure, scalable Django REST API powering the KEEFAO website for member registration, event management, automated contributions, announcements, and gallery.
 
 ---
 
-# Tech Stack
+# 🚀 Key Features
 
-Backend
-• Python 3.10+
-• Django 4+
-• Django REST Framework
-• JWT Authentication
+### 💳 Integrated Payment Systems
 
-Database
-• SQLite (development)
-• PostgreSQL (production recommended)
+* **M-Pesa Express (STK Push):** Real-time mobile payment integration via Safaricom Daraja API.
+* **Stripe Global Payments:** Support for international credit/debit card donations.
+* **Automated Accounting:** Django Signals automatically convert successful `Payments` into `Contribution` records and update Member balances.
 
-Other
-• CORS Headers
-• Pillow (image handling)
+### 👤 Member & Public Features
+
+* **Member Portal:** Registration, JWT-based authentication, and automated username generation.
+* **Event Management:** Event creation and secure registration for logged-in alumni.
+* **Public Contributions:** Anonymous or named donations (min. KES 50) with no login required.
+* **Dynamic Content:** API endpoints for Announcements and Gallery management.
+
+### 🛠️ Advanced Admin Dashboard
+
+* **Financial Insights:** Custom admin templates displaying total verified contributions and entry counts.
+* **Visual Auditing:** Color-coded transaction statuses (Pending, Verified, Failed).
+* **Batch Operations:** One-click verification for manual contribution audits.
 
 ---
 
-# Project Structure
+# 🏗️ Project Structure
 
-```
+```text
 keefao-backend/
-│
-├── manage.py
-├── README.md
-├── .gitignore
-├── requirements.txt
-├── .env.example
-│
-├── keefao/
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── wsgi.py
-│   ├── urls.py
-│   ├── settings/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── dev.py
-│   │   └── prod.py
-│
+├── keefao/              # Project configuration (settings, urls, wsgi)
 ├── apps/
-│   │
-│   ├── accounts/
-│   │   ├── models.py         # Member
-│   │   ├── views.py
-│   │   ├── serializers.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   │
-│   ├── events/
-│   │   ├── models.py         #Event, EventRegistration
-│   │   ├── views.py
-│   │   ├── serializers.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   │
-│   ├── contributions/
-│   │   ├── models.py         #Contribution
-│   │   ├── views.py
-│   │   ├── serializers.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   │
-│   ├── payments/
-│   │   ├── models.py       # Payment
-|   |   ├── services.py     # PaymentService 
-│   │   ├── views.py        # Mpesa/Stripe views
-│   │   ├── serializers.py
-│   │   ├── urls.py
-│   │   ├── mpesa.py
-│   │   ├── stripe.py
-│   │   └── admin.py
-│   │
-│   ├── core/
-│   │   ├── models.py       # SiteSetting
-│   │   ├── views.py        # SiteSettingsView
-│   │   ├── serializers.py
-│   │   ├── urls.py
-│   │   └── admin.py
-│   │
-│   └── gallery/
-│       ├── models.py         # GalleryImage
-│       ├── views.py
-│       ├── serializers.py
-│       ├── urls.py
-│       └── admin.py
-│
-├── media/
-├── static/
-│
-└── scripts/
-    └── wait-for-db.sh
-```
-
----
-
-# Features
-
-Member Features
-
-• Register as alumni member
-• Automatic username generation
-• Secure login authentication
-• Event registration
-
-Public Features
-
-• View announcements
-• View events
-• View gallery
-• Submit contribution (minimum KES 50)
-• Donate without login
-
-Admin Features
-
-• Manage members
-• Manage events
-• Manage announcements
-• Manage gallery
-• View contributions
-
----
-
----
-Benefits of core app
-Global site settings are centralized and editable in admin.
-Reusable view for frontend or API consumption.
-Logging ready – tracks fetch success or errors.
-Scalable – you can add more site-wide utilities, constants, or helpers.
-Fully modular – sits cleanly alongside accounts, events, contributions, payments, and gallery.
----
-
-# API Base URL
+│   ├── accounts/        # Custom Member model & Auth logic
+│   ├── contributions/   # Contribution records & aggregate logic
+│   ├── payments/        # M-Pesa & Stripe services, Webhooks, and Signals
+│   ├── events/          # Event management & Registrations
+│   ├── core/            # Global SiteSettings & Utilities
+│   └── gallery/         # Image management
+├── templates/
+│   └── admin/           # Custom Admin dashboard overrides
+├── static/ & media/     # Assets and user-uploaded content
+└── manage.py
 
 ```
-http://localhost:8000/api/
-```
 
 ---
 
-# API Endpoints
+# 🛠️ Tech Stack
 
-Authentication
-
-POST `/api/register/`
-Register new member
-
----
-
-Events
-
-GET `/api/events/`
-List events
-
-POST `/api/events/register/`
-Register for event (requires login)
+* **Backend:** Python 3.12+, Django 5.x, Django REST Framework (DRF)
+* **Auth:** SimpleJWT (JSON Web Tokens)
+* **Payments:** Safaricom Daraja API, Stripe API
+* **Database:** SQLite (Dev), PostgreSQL (Recommended for Prod)
+* **Task Handling:** Django Signals (Real-time processing)
 
 ---
 
-Contributions
+# 🚀 Installation & Setup
 
-POST `/api/contribute/`
-Public contribution (no login required)
+### 1. Environment Setup
 
-Minimum contribution: KES 50
-
----
-
-Announcements
-
-GET `/api/announcements/`
-List announcements
-
----
-
-Gallery
-
-GET `/api/gallery/`
-List gallery images
-
----
-
-# Installation Guide
-
-Step 1: Clone project
-
-```
+```bash
 git clone https://github.com/yourusername/keefao.git
-
 cd keefao
-```
-
----
-
-Step 2: Create virtual environment
-
-```
 python -m venv venv
-
-source venv/bin/activate
-
-# Windows
-venv\Scripts\activate
-```
-
----
-
-Step 3: Install dependencies
+# Windows: venv\Scripts\activate | Mac/Linux: source venv/bin/activate
+pip install -r requirements.txt
 
 ```
-pip install django
-pip install djangorestframework
-pip install djangorestframework-simplejwt
-pip install django-cors-headers
-pip install pillow
+
+### 2. Configuration (`.env`)
+
+Create a `.env` file in the root directory:
+
+```env
+DEBUG=True
+SECRET_KEY=your_secret_key
+MPESA_CONSUMER_KEY=your_key
+MPESA_CONSUMER_SECRET=your_secret
+MPESA_SHORTCODE=174379
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
 ```
 
----
+### 3. Database Initialization
 
-Step 4: Run migrations
-
-```
+```bash
 python manage.py makemigrations
-
 python manage.py migrate
-```
-
----
-
-Step 5: Create admin user
-
-```
 python manage.py createsuperuser
-```
-
----
-
-Step 6: Run server
-
-```
 python manage.py runserver
-```
-
-Server runs at:
 
 ```
-http://127.0.0.1:8000
+
 ```
+# Core Framework
+Django>=4.2,<5.1
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+
+# Database & Environment
+psycopg2-binary        # PostgreSQL driver for production
+python-dotenv          # Loads variables from .env
+requests               # Required for M-Pesa Daraja API calls
+
+# Payments & Media
+stripe                 # Stripe Python SDK
+Pillow                 # Image handling for Gallery/Profile photos
+
+# Production Deployment
+gunicorn               # WSGI HTTP Server for UNIX
+whitenoise             # Serving static files efficiently in production
+```
+---
+
+# 🔌 API Endpoints (Highlights)
+
+| Endpoint | Method | Description | Auth |
+| --- | --- | --- | --- |
+| `/api/register/` | POST | Alumni self-registration | Public |
+| `/api/payments/mpesa/` | POST | Trigger M-Pesa STK Push | Public/Member |
+| `/api/payments/stripe/` | POST | Create Stripe Checkout Session | Public/Member |
+| `/api/contributions/` | GET | List verified contributions | Public |
+| `/api/events/register/` | POST | Register for an upcoming event | **Member** |
 
 ---
 
-# Admin Panel
+# 📊 Admin Insights
 
-Access admin dashboard:
+Access the dashboard at `/admin`.
+The **Contributions** module features a custom header:
 
-```
-http://127.0.0.1:8000/admin
-```
-
-Admin can manage:
-
-• Members
-• Events
-• Contributions
-• Announcements
-• Gallery
+* **Total Verified Amount:** Real-time sum of all successful KEEF funding.
+* **Status Indicators:** Orange (Pending), Green (Verified), Red (Failed).
 
 ---
 
-# Sample Member Registration JSON
+# 🔒 Security
 
-```
-POST /api/register/
-
-{
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john@email.com",
-  "password": "securepassword",
-  "sponsor_name": "Jane Doe",
-  "kcse_year": 2018
-}
-```
+* **Idempotency:** Signals check `payment_reference` to prevent double-counting contributions.
+* **Validation:** Minimum contribution limits and secure webhook signature verification for Stripe.
+* **Environment Safety:** Sensitive credentials managed via environment variables.
 
 ---
 
-# Contribution JSON Example
+# 📄 License & Support
 
-```
-POST /api/contribute/
-
-{
-  "contributor_name": "Well Wisher",
-  "email": "donor@email.com",
-  "amount": 500,
-  "message": "Supporting education"
-}
-```
+Distributed under the **MIT License**.
+Maintained by the **KEEFAO Tech Team**.
+Contact: [keefao@example.com](mailto:keefao@example.com)
 
 ---
 
-# Production Deployment Recommendations
-
-Use:
-
-• PostgreSQL database
-• Gunicorn
-• Nginx
-• HTTPS (Let's Encrypt)
-• Cloud storage for media
-
-Recommended hosts:
-
-• Render
-• Railway
-• DigitalOcean
-• AWS
-
----
-
-# Security Features
-
-• JWT authentication
-• Password hashing
-• Protected endpoints
-• Minimum contribution validation
-
----
-
-# Future Improvements
-
-• M-Pesa integration
-• Email notifications
-• Member dashboard
-• Payment tracking
-• Reporting system
-
----
-
-# License
-
-MIT License
-
----
-
-# Maintained By
-
-KEEFAO Tech Team
-Supporting education through technology.
-
----
-
-# Support
-
-For technical support contact:
-
-[keefao@example.com](mailto:keefao@example.com)
-
- 
