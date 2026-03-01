@@ -1,0 +1,20 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block content_title %}
+    {{ block.super }} {# This keeps the default breadcrumbs and title #}
+    
+    <div style="background: #27ae60; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div>
+            <h2 style="margin:0; color: white; font-weight: 600;"> 
+                Total Verified: <span style="font-size: 1.4em;">KES {{ total_amount }}</span>
+            </h2>
+            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 0.9em;">
+                Based on current filters ({{ total_count }} entries)
+            </p>
+        </div>
+        <div style="font-size: 2em; opacity: 0.3;">
+            💰
+        </div>
+    </div>
+{% endblock %}
